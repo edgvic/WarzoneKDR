@@ -1,9 +1,10 @@
 import {Component} from 'react';
-import unirest from 'unirest';
-import Particles, { InteractivityDetect } from 'react-particles-js';
+import Particles from 'react-particles-js';
 import Navigation from './components/Navigation/Navigation.js';
 import Logo from './components/Logo/Logo.js';
 import UrlForm from './components/UrlForm/UrlForm.js';
+import SignIn from './components/SignIn/SignIn.js';
+import Register from './components/Register/Register.js';
 import BackgroundRemoval from './components/BackgroundRemoval/BackgroundRemoval.js';
 
 import './App.css';
@@ -31,7 +32,9 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      fetched: false
+      fetched: false,
+      route: 'signin',
+      isSignedIn: false
     }
     this.onButtonSubmit = this.onButtonSubmit.bind(this);
   }
@@ -69,19 +72,40 @@ class App extends Component {
     });
   }
 
+  onRouteChange = (route) => {
+    if (route === 'signout') {
+      this.setState({isSignedIn: false})
+    } else if (route === 'home') {
+      this.setState({isSignedIn: true})
+    }
+    this.setState({route: route});
+  }
+
   render() {
     return (
       <div className="App">
         <Particles className="particles"
                 params={particlesOptions}
               />
-        <Navigation />
-        <Logo />
-        <UrlForm 
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        />
-        { this.state.fetched ? <BackgroundRemoval imageUrl={this.state.imageUrl}/> : null }
+        <Navigation 
+        isSignedIn={this.state.isSignedIn}
+        onRouteChange={this.onRouteChange} />
+        
+        {this.state.route === 'home' 
+        ?<div>
+          <Logo />
+          <UrlForm 
+            onInputChange={this.onInputChange}
+            onButtonSubmit={this.onButtonSubmit}
+          />
+          { this.state.fetched ? <BackgroundRemoval imageUrl={this.state.imageUrl}/> : null }
+        </div>
+        : (
+            this.state.route === 'signin'
+            ? <SignIn onRouteChange={this.onRouteChange}/>
+            : <Register onRouteChange={this.onRouteChange}/>
+          )
+        }
       </div>
     );
   }
