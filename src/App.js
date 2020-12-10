@@ -3,7 +3,7 @@ import unirest from 'unirest';
 import Particles, { InteractivityDetect } from 'react-particles-js';
 import Navigation from './components/Navigation/Navigation.js';
 import Logo from './components/Logo/Logo.js';
-import TagForm from './components/TagForm/TagForm.js';
+import UrlForm from './components/UrlForm/UrlForm.js';
 import BackgroundRemoval from './components/BackgroundRemoval/BackgroundRemoval.js';
 
 import './App.css';
@@ -30,8 +30,10 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-      imageUrl: ''
+      imageUrl: '',
+      fetched: false
     }
+    this.onButtonSubmit = this.onButtonSubmit.bind(this);
   }
 
   onInputChange = (event) => {
@@ -39,7 +41,9 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
-    {/*this.setState({imageUrl: this.state.input})*/}
+    this.setState({imageUrl: this.state.input});
+
+    let currentComponent = this;
 
     var unirest = require("unirest");
 
@@ -59,9 +63,9 @@ class App extends Component {
     
     req.end(function (res) {
       if (res.error) throw new Error(res.error);
-    
-      console.log(res.body);
-      {/*this.setState({imageUrl: res.body.image_url}) */}
+
+      currentComponent.setState({imageUrl: res.body.response.image_url});
+      currentComponent.setState({fetched: true});
     });
   }
 
@@ -73,11 +77,11 @@ class App extends Component {
               />
         <Navigation />
         <Logo />
-        <TagForm 
+        <UrlForm 
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        <BackgroundRemoval imageUrl={this.state.imageUrl}/>
+        { this.state.fetched ? <BackgroundRemoval imageUrl={this.state.imageUrl}/> : null }
       </div>
     );
   }

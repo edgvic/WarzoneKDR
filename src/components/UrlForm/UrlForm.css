@@ -1,4 +1,6 @@
-.Tilt {
+  .form {
+    width: 700px;
+
     background: rgb(34,186,195);
     background: linear-gradient(0deg, rgba(34,186,195,1) 0%, rgba(45,253,72,1) 100%);
 }
