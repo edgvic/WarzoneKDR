@@ -38,7 +38,7 @@ class App extends Component {
       isSignedIn: false,
       user: {
         id: '',
-        name: 'asd',
+        name: '',
         email: '',
         entries: 0,
         joined: ''
